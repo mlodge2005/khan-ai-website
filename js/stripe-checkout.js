@@ -4,7 +4,7 @@
  * CONFIG: Replace these with your actual Stripe values.
  * Get them from https://dashboard.stripe.com/
  */
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Sf4Q0ID3oRDYINyt0j9K72CbV5bTQUveDEwBcEm7GzgPATtdyzTfOMo08u5nSQdJtEGlIagTuibEpTALtWUNZ9W00fbyAmpPJ';
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Sf4Q0ID3oRDYINykQoEC6pyleYUZt6utaNwtMZSWUxZU6yBiApIaSWngBhAMfnITGZBbYQX7rHsGPTYMNji4R5G00dxI0zRZJ';
 const STRIPE_PRICE_ID = 'price_1TlcA3ID3oRDYINyeVbUwENv';
 
 // Base URL for redirects — update for your domain

@@ -115,6 +115,16 @@ section {
   color: #B0B0B0;
 }
 
+.hero-logo {
+  margin-bottom: 1.5rem;
+}
+
+.hero-logo img {
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+}
+
 .hero .note {
   font-size: 0.9rem;
   color: #6B6B6B;

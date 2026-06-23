@@ -4,8 +4,8 @@
  * CONFIG: Replace these with your actual Stripe values.
  * Get them from https://dashboard.stripe.com/
  */
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_YOUR_PUBLISHABLE_KEY';
-const STRIPE_PRICE_ID = 'price_YOUR_PRICE_ID';
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Sf4Q0ID3oRDYINyt0j9K72CbV5bTQUveDEwBcEm7GzgPATtdyzTfOMo08u5nSQdJtEGlIagTuibEpTALtWUNZ9W00fbyAmpPJ';
+const STRIPE_PRICE_ID = 'price_1TlcA3ID3oRDYINyeVbUwENv';
 
 // Base URL for redirects — update for your domain
 const SITE_URL = 'https://mlodge2005.github.io/khan-ai-website';

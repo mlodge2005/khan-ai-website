@@ -1,4 +1,11 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env*.local
 server/node_modules/
 server/.env
-.env
 *.log
+.DS_Store
+public_assets_backup/

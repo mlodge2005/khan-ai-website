@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap');
+
 /* ===== KHAN AI — Design System ===== */
 /* Background: #0B0B0C | Text: #F5F5F5 | Gold: #C6A15B */
 
-/* --- Reset & Base --- */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -22,7 +23,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* --- Typography --- */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter Tight', sans-serif;
   font-weight: 700;
@@ -60,19 +60,16 @@ a:hover {
   opacity: 0.8;
 }
 
-/* --- Container --- */
 .container {
   max-width: 1100px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
-/* --- Section --- */
 section {
   padding: 5rem 0;
 }
 
-/* --- Hero --- */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -131,7 +128,6 @@ section {
   margin-top: 1.5rem;
 }
 
-/* --- Buttons --- */
 .btn-gold {
   display: inline-block;
   background: #C6A15B;
@@ -147,18 +143,22 @@ section {
   text-decoration: none;
 }
 
-.btn-gold:hover {
+.btn-gold:hover:not(:disabled) {
   background: #D4AF6F;
   transform: translateY(-1px);
   box-shadow: 0 4px 20px rgba(198, 161, 91, 0.3);
   opacity: 1;
 }
 
-.btn-gold:active {
+.btn-gold:active:not(:disabled) {
   transform: translateY(0);
 }
 
-/* --- How It Works --- */
+.btn-gold:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
 .steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -204,7 +204,6 @@ section {
   margin: 0 auto;
 }
 
-/* --- Features --- */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -238,7 +237,6 @@ section {
   color: #8A8A8A;
 }
 
-/* --- Pricing --- */
 .pricing-section {
   text-align: center;
 }
@@ -251,20 +249,6 @@ section {
   border-radius: 16px;
   background: rgba(198, 161, 91, 0.03);
   position: relative;
-}
-
-.pricing-card::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(198, 161, 91, 0.2), transparent 50%);
-  z-index: -1;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: xor;
-  padding: 1px;
 }
 
 .price {
@@ -307,7 +291,17 @@ section {
   margin-top: 1.25rem;
 }
 
-/* --- Footer --- */
+.pricing-note-left {
+  text-align: left;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #8A8A8A;
+}
+
+.pricing-note-left strong {
+  color: #B0B0B0;
+}
+
 footer {
   text-align: center;
   padding: 3rem 1.5rem;
@@ -320,7 +314,6 @@ footer p {
   margin: 0 auto;
 }
 
-/* --- Download Page --- */
 .download-page {
   min-height: 100vh;
   display: flex;
@@ -387,25 +380,6 @@ footer p {
   color: #8A8A8A;
   font-size: 0.95rem;
   margin-bottom: 2rem;
-}
-
-.details-list {
-  list-style: none;
-  text-align: left;
-  margin: 1.5rem 0;
-}
-
-.details-list li {
-  padding: 0.5rem 0;
-  color: #B0B0B0;
-  font-size: 0.95rem;
-}
-
-.details-list li::before {
-  content: '›';
-  color: #C6A15B;
-  margin-right: 0.5rem;
-  font-weight: 700;
 }
 
 .details-section {
@@ -484,7 +458,6 @@ footer p {
   margin-top: 1.5rem;
 }
 
-/* --- Checkout banners --- */
 .checkout-banner {
   padding: 0.85rem 1rem;
   border-radius: 8px;
@@ -511,13 +484,18 @@ footer p {
   color: #F0B0B0;
 }
 
-/* --- Responsive --- */
-@media (max-width: 768px) {
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
+.text-muted {
+  color: #6B6B6B;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}
 
+.text-muted code {
+  color: #8A8A8A;
+}
+
+@media (max-width: 768px) {
+  .steps,
   .features-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
@@ -541,7 +519,8 @@ footer p {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .steps, .features-grid {
+  .steps,
+  .features-grid {
     gap: 1.25rem;
   }
 }

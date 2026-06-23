@@ -1,77 +1,68 @@
-# Khan AI Website
+# Khan AI Website (Next.js)
 
-Competitive intelligence product landing page for **Khan AI**.
+Competitive intelligence landing page for **Khan AI**, built with **Next.js** for deployment on **Vercel**.
 
-Static site (HTML/CSS/JS) on GitHub Pages, with a small Node checkout API for Stripe.
+Stripe Checkout uses **server-side Checkout Sessions** via Next.js API routes — no separate Express server, no client-only Stripe.js integration.
 
-## Stripe Checkout (server-side)
+## Vercel deployment
 
-The site uses **Stripe Checkout Sessions** created on the server. The frontend no longer calls `redirectToCheckout` (client-only integration).
+1. Import the repo in [Vercel](https://vercel.com) (framework preset: **Next.js**).
+2. Add **Environment Variables** (Production):
 
-### Architecture
+   | Variable | Notes |
+   |----------|--------|
+   | `STRIPE_SECRET_KEY` | `sk_live_…` — **never expose in client code** |
+   | `STRIPE_ALLOWED_PRICE_IDS` | e.g. `price_1TlcA3ID3oRDYINyeVbUwENv` |
+   | `NEXT_PUBLIC_STRIPE_PRICE_ID` | Same price id (public, sent from browser) |
+   | `NEXT_PUBLIC_SITE_URL` | Optional — `https://your-custom-domain.com` |
 
-```text
-Browser → POST /api/create-checkout-session { priceId }
-       → Checkout API (STRIPE_SECRET_KEY)
-       → { url } → redirect to checkout.stripe.com
-       → success → download.html?session_id=… (verified via API)
-       → cancel → index.html?checkout=cancelled
-```
+   Vercel sets `VERCEL_URL` automatically; redirect URLs use it when `NEXT_PUBLIC_SITE_URL` is unset.
 
-### 1. Stripe Dashboard
+3. Deploy — `npm run build` runs on Vercel.
 
-1. Create product **Competitive Intelligence Agent** — $200 one-time
-2. Copy **Price ID** (`price_…`)
-3. For development, toggle **Test mode** and use test price + `sk_test_` secret key
-
-### 2. Checkout API (`server/`)
+## Local development
 
 ```bash
-cd server
-cp .env.example .env
-# STRIPE_SECRET_KEY=sk_test_...
-# STRIPE_ALLOWED_PRICE_IDS=price_test_...
-# SITE_URL=https://mlodge2005.github.io/khan-ai-website
+cp .env.example .env.local
+# Edit .env.local with your Stripe keys
 npm install
-npm start
+npm run dev
 ```
 
-See [server/README.md](server/README.md) for deployment and tests.
+Open [http://localhost:3000](http://localhost:3000).
 
-### 3. Frontend config
+## Scripts
 
-Edit `js/checkout-config.js`:
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run start` | Run production server |
 
-- `KHAN_CHECKOUT_API_URL` — production API (default `https://api.khan-automation.com`)
-- `KHAN_STRIPE_PRICE_ID` — price id sent to the API (use test price id in test mode)
+## API routes
 
-No secret keys in the frontend.
+| Route | Description |
+|-------|-------------|
+| `POST /api/create-checkout-session` | Body `{ priceId }` → `{ url }` |
+| `GET /api/checkout-session/[sessionId]` | Verify paid session |
 
-### 4. GitHub Pages
-
-Repo Settings → Pages → branch `main`, folder `/ (root)`.
-
-Live site: `https://mlodge2005.github.io/khan-ai-website/`
-
-## Files
+## Project structure
 
 ```
-├── index.html
-├── download.html
-├── css/style.css
-├── js/
-│   ├── checkout-config.js   # API URL + price id (no secrets)
-│   └── stripe-checkout.js   # Creates session via API, redirects to session.url
-├── server/                  # Stripe Checkout Session API
-│   ├── index.js
-│   ├── package.json
-│   └── test-checkout.js
-└── README.md
+app/
+  page.tsx              # Landing page
+  download/page.tsx     # Post-purchase download
+  api/                  # Stripe Checkout API routes
+components/             # Checkout button, download UI
+public/assets/logos/    # SVG logos
+lib/stripe.ts           # Stripe client + site URL helpers
 ```
 
-## Design System
+## Legacy
 
-- **Background:** `#0B0B0C`
-- **Text:** `#F5F5F5`
-- **Accent / Gold:** `#C6A15B`
-- **Fonts:** Inter (body), Inter Tight (headlines)
+The old static HTML site and `server/` Express checkout API were replaced by this Next.js app. Do not deploy `server/` separately on Vercel.
+
+## Design
+
+- Background `#0B0B0C`, text `#F5F5F5`, accent `#C6A15B`
+- Fonts: Inter, Inter Tight

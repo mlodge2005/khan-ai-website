@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download — Khan AI Competitive Intelligence Agent</title>
+  <meta name="description" content="Download your Competitive Intelligence Agent install script.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="download-page">
+    <div class="download-content">
+      <div class="success-icon">✅</div>
+      <h1>Thanks for your purchase!</h1>
+      <p class="sub">Your Competitive Intelligence Agent is ready to install.</p>
+
+      <p style="text-align:left;color:#8A8A8A;font-size:0.9rem;margin-bottom:0.75rem;">Run this command in your terminal:</p>
+      <div class="code-block">
+        <code>curl -fsSL https://raw.githubusercontent.com/mlodge2005/treffy-desktop/main/scripts/install.sh | bash</code>
+        <button class="copy-btn" onclick="copyCommand()">Copy</button>
+      </div>
+
+      <p class="info">After running, the agent will ask for your business info and API key.</p>
+
+      <div class="details-section">
+        <button class="details-toggle" onclick="toggleDetails(this)">What you need to get started</button>
+        <div class="details-body">
+          <ol>
+            <li>An API key from <strong style="color:#F5F5F5;">OpenAI</strong>, <strong style="color:#F5F5F5;">Anthropic</strong>, <strong style="color:#F5F5F5;">Grok</strong>, or <strong style="color:#F5F5F5;">DeepSeek</strong></li>
+            <li>Your business name and location</li>
+            <li>A short description of what you sell</li>
+            <li>macOS, Linux, or Windows (WSL2) terminal access</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <button class="details-toggle" onclick="toggleDetails(this)">Detailed install instructions</button>
+        <div class="details-body">
+          <ol>
+            <li>Open your terminal (Terminal.app on macOS, PowerShell on Windows WSL2)</li>
+            <li>Paste the install command above and press Enter</li>
+            <li>The installer will download and set up the agent</li>
+            <li>Follow the prompts to configure your business and API key</li>
+            <li>Run <code style="color:#C6A15B;">khan-intel</code> to start your first intelligence report</li>
+          </ol>
+        </div>
+      </div>
+
+      <p style="color:#6B6B6B;font-size:0.85rem;margin-top:1rem;">Need help? Run <code style="color:#8A8A8A;">khan-intel --help</code> or re-read the setup guide above.</p>
+
+      <a href="index.html" class="download-back">← Back to Khan AI</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleDetails(btn) {
+      btn.classList.toggle('active');
+      const body = btn.nextElementSibling;
+      body.classList.toggle('open');
+    }
+
+    function copyCommand() {
+      const code = document.querySelector('.code-block code');
+      navigator.clipboard.writeText(code.textContent.trim()).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = code.textContent.trim();
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        const btn = document.querySelector('.copy-btn');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

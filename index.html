@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khan AI — Competitive Intelligence for Local Businesses</title>
+  <meta name="description" content="Automated competitive intelligence for local businesses. Scrapes Yelp & Google reviews, identifies competitors, and surfaces weak points. One-time purchase. $200.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Know what your customers are <em>actually</em> saying. Before your competitors do.</h1>
+      <p>Automated competitive intelligence for local businesses. Scrapes Yelp &amp; Google reviews, identifies your competitors, and surfaces weak points in your customer relationships. One-time purchase. <strong style="color:#F5F5F5;">$200</strong>.</p>
+      <button id="checkout-button" class="btn-gold">Get Intel — $200</button>
+      <p class="note">Runs on your machine. Your data stays with you. No subscription.</p>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how-it-works">
+    <div class="container">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <h3>Set up in 5 minutes</h3>
+          <p>One command install, paste your API key, done. No complex configuration.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <h3>Tell it about your business</h3>
+          <p>Your business name, location, and what you sell. That's all we need to get started.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <h3>Get intelligence</h3>
+          <p>Run reports, track competitors, and receive weekly intelligence briefs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features">
+    <div class="container">
+      <h2>What You Get</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🕵️</div>
+          <h3>Competitor Discovery</h3>
+          <p>Automatically finds your top local competitors from Yelp and Google review data. Know who you're really up against.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Complaint Analysis</h3>
+          <p>Extracts what customers complain about most — with evidence quotes — so you can fix issues before they cost you business.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Weekly Reports</h3>
+          <p>Recurring intelligence briefs delivered straight to your channel. Competitor moves, complaint trends, market shifts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section id="pricing">
+    <div class="container pricing-section">
+      <h2>One Price. Full Access.</h2>
+      <div class="pricing-card">
+        <div class="price">$200</div>
+        <div class="price-label">one-time purchase</div>
+        <ul class="pricing-includes">
+          <li>The Competitive Intelligence Agent software</li>
+          <li>Desktop app + install script</li>
+          <li>1 year of updates</li>
+          <li>Runs locally — your data stays with you</li>
+        </ul>
+        <div class="pricing-note" style="text-align:left;margin-bottom:1.5rem;font-size:0.9rem;color:#8A8A8A;">
+          <strong style="color:#B0B0B0;">What you need:</strong> An API key from OpenAI, Anthropic, Grok, or DeepSeek.
+        </div>
+        <button id="checkout-button-pricing" class="btn-gold">Buy Now — $200</button>
+        <p class="pricing-note">No hidden fees. Runs locally on your machine.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container">
+      <p>Built by Khan AI</p>
+      <p style="margin-top:0.5rem;">This is a local application. We do not host your data.</p>
+    </div>
+  </footer>
+
+  <!-- Stripe Checkout -->
+  <script src="js/stripe-checkout.js"></script>
+</body>
+</html>

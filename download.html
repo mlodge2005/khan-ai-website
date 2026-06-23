@@ -16,10 +16,16 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/checkout-config.js"></script>
 </head>
 <body>
   <div class="download-page">
     <div class="download-content">
+      <div id="download-verifying" class="checkout-banner checkout-banner-info" hidden>
+        Verifying your payment…
+      </div>
+      <div id="download-error" class="checkout-banner checkout-banner-error" hidden></div>
+      <div id="download-success">
       <div class="success-icon">✅</div>
       <h1>Thanks for your purchase!</h1>
       <p class="sub">Your Competitive Intelligence Agent is ready to install.</p>
@@ -60,16 +66,11 @@
       <p style="color:#6B6B6B;font-size:0.85rem;margin-top:1rem;">Need help? Run <code style="color:#8A8A8A;">khan-intel --help</code> or re-read the setup guide above.</p>
 
       <a href="index.html" class="download-back">← Back to Khan AI</a>
+      </div>
     </div>
   </div>
 
   <script>
-    function toggleDetails(btn) {
-      btn.classList.toggle('active');
-      const body = btn.nextElementSibling;
-      body.classList.toggle('open');
-    }
-
     function copyCommand() {
       const code = document.querySelector('.code-block code');
       navigator.clipboard.writeText(code.textContent.trim()).then(() => {
@@ -91,6 +92,51 @@
         setTimeout(() => { btn.textContent = orig; }, 2000);
       });
     }
+
+    function toggleDetails(btn) {
+      btn.classList.toggle('active');
+      const body = btn.nextElementSibling;
+      body.classList.toggle('open');
+    }
+
+    async function verifyCheckoutSession() {
+      var params = new URLSearchParams(window.location.search);
+      var sessionId = params.get('session_id');
+      var verifying = document.getElementById('download-verifying');
+      var errorBox = document.getElementById('download-error');
+      var successBox = document.getElementById('download-success');
+
+      if (!sessionId) {
+        errorBox.textContent = 'Missing checkout session. Complete purchase from the home page.';
+        errorBox.hidden = false;
+        successBox.hidden = true;
+        return;
+      }
+
+      verifying.hidden = false;
+
+      try {
+        var api = window.KHAN_CHECKOUT_API_URL || 'http://localhost:4242';
+        var res = await fetch(api + '/api/checkout-session/' + encodeURIComponent(sessionId));
+        var data = await res.json().catch(function () { return {}; });
+
+        verifying.hidden = true;
+
+        if (!res.ok || !data.ok) {
+          errorBox.textContent = data.error || 'Payment could not be verified. Contact support if you were charged.';
+          errorBox.hidden = false;
+          successBox.hidden = true;
+          return;
+        }
+      } catch (err) {
+        verifying.hidden = true;
+        errorBox.textContent = 'Could not verify payment (network error). Refresh after a moment or contact support.';
+        errorBox.hidden = false;
+        successBox.hidden = true;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', verifyCheckoutSession);
   </script>
 </body>
 </html>

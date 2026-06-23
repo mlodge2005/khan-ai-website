@@ -2,60 +2,71 @@
 
 Competitive intelligence product landing page for **Khan AI**.
 
-Static site built with HTML, CSS, and JS. Hosted on GitHub Pages.
+Static site (HTML/CSS/JS) on GitHub Pages, with a small Node checkout API for Stripe.
 
-## Stripe Setup
+## Stripe Checkout (server-side)
 
-The site uses **Stripe Checkout** (hosted payment page) — no backend required.
+The site uses **Stripe Checkout Sessions** created on the server. The frontend no longer calls `redirectToCheckout` (client-only integration).
 
-### 1. Create a Stripe account
+### Architecture
 
-Go to [stripe.com](https://stripe.com) and sign up.
-
-### 2. Create a product
-
-1. In the Stripe Dashboard, go to **Products** → **Add Product**
-2. Name: `Competitive Intelligence Agent`
-3. Description: `Automated competitive intelligence for local businesses`
-4. Price: **$200** one-time
-5. Save the product
-
-### 3. Get your keys
-
-1. In Stripe Dashboard, go to **Developers** → **API keys**
-2. Copy your **Publishable key** (starts with `pk_live_` or `pk_test_`)
-3. Go to **Products** → click your product → copy the **Price ID** (starts with `price_`)
-
-### 4. Update the config
-
-Edit `js/stripe-checkout.js` and replace:
-
-```js
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_YOUR_PUBLISHABLE_KEY';
-const STRIPE_PRICE_ID = 'price_YOUR_PRICE_ID';
+```text
+Browser → POST /api/create-checkout-session { priceId }
+       → Checkout API (STRIPE_SECRET_KEY)
+       → { url } → redirect to checkout.stripe.com
+       → success → download.html?session_id=… (verified via API)
+       → cancel → index.html?checkout=cancelled
 ```
 
-Also update `SITE_URL` if you're using a custom domain.
+### 1. Stripe Dashboard
 
-### 5. Enable GitHub Pages
+1. Create product **Competitive Intelligence Agent** — $200 one-time
+2. Copy **Price ID** (`price_…`)
+3. For development, toggle **Test mode** and use test price + `sk_test_` secret key
 
-1. Go to repo Settings → Pages
-2. Source: Deploy from a branch
-3. Branch: `main`, folder: `/ (root)`
-4. Save
+### 2. Checkout API (`server/`)
 
-Your site will be live at: `https://mlodge2005.github.io/khan-ai-website/`
+```bash
+cd server
+cp .env.example .env
+# STRIPE_SECRET_KEY=sk_test_...
+# STRIPE_ALLOWED_PRICE_IDS=price_test_...
+# SITE_URL=https://mlodge2005.github.io/khan-ai-website
+npm install
+npm start
+```
+
+See [server/README.md](server/README.md) for deployment and tests.
+
+### 3. Frontend config
+
+Edit `js/checkout-config.js`:
+
+- `KHAN_CHECKOUT_API_URL` — production API (default `https://api.khan-automation.com`)
+- `KHAN_STRIPE_PRICE_ID` — price id sent to the API (use test price id in test mode)
+
+No secret keys in the frontend.
+
+### 4. GitHub Pages
+
+Repo Settings → Pages → branch `main`, folder `/ (root)`.
+
+Live site: `https://mlodge2005.github.io/khan-ai-website/`
 
 ## Files
 
 ```
-├── index.html              # Main landing page
-├── download.html           # Post-purchase download page
-├── css/
-│   └── style.css           # All styles (dark theme)
+├── index.html
+├── download.html
+├── css/style.css
 ├── js/
-│   └── stripe-checkout.js  # Stripe checkout integration
-└── README.md               # This file
+│   ├── checkout-config.js   # API URL + price id (no secrets)
+│   └── stripe-checkout.js   # Creates session via API, redirects to session.url
+├── server/                  # Stripe Checkout Session API
+│   ├── index.js
+│   ├── package.json
+│   └── test-checkout.js
+└── README.md
 ```
 
 ## Design System

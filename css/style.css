@@ -484,6 +484,33 @@ footer p {
   margin-top: 1.5rem;
 }
 
+/* --- Checkout banners --- */
+.checkout-banner {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+.checkout-banner-cancel {
+  background: rgba(198, 161, 91, 0.12);
+  border: 1px solid rgba(198, 161, 91, 0.35);
+  color: #E8D4A8;
+}
+
+.checkout-banner-info {
+  background: rgba(100, 149, 237, 0.12);
+  border: 1px solid rgba(100, 149, 237, 0.35);
+  color: #B8C9F0;
+}
+
+.checkout-banner-error {
+  background: rgba(220, 80, 80, 0.12);
+  border: 1px solid rgba(220, 80, 80, 0.4);
+  color: #F0B0B0;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .steps {

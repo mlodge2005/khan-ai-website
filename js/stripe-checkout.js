@@ -1,33 +1,85 @@
 /**
- * Khan AI — Stripe Checkout Integration
+ * Khan AI — Stripe Checkout (server-side Checkout Session)
  *
- * CONFIG: Replace these with your actual Stripe values.
- * Get them from https://dashboard.stripe.com/
+ * Frontend sends only the price id; secret keys stay on the checkout API.
  */
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Sf4Q0ID3oRDYINykQoEC6pyleYUZt6utaNwtMZSWUxZU6yBiApIaSWngBhAMfnITGZBbYQX7rHsGPTYMNji4R5G00dxI0zRZJ';
-const STRIPE_PRICE_ID = 'price_1TlcA3ID3oRDYINyeVbUwENv';
+(function () {
+  'use strict';
 
-// Base URL for redirects — update for your domain
-const SITE_URL = 'https://mlodge2005.github.io/khan-ai-website';
+  // Checkout API — set CHECKOUT_API_URL in js/checkout-config.js for production
+  var CHECKOUT_API_URL = window.KHAN_CHECKOUT_API_URL || 'http://localhost:4242';
+  var STRIPE_PRICE_ID = window.KHAN_STRIPE_PRICE_ID || 'price_1TlcA3ID3oRDYINyeVbUwENv';
 
-const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+  function setButtonLoading(btn, loading) {
+    if (!btn) return;
+    btn.disabled = loading;
+    btn.setAttribute('aria-busy', loading ? 'true' : 'false');
+    if (loading) {
+      btn.dataset.originalText = btn.textContent;
+      btn.textContent = 'Redirecting…';
+    } else if (btn.dataset.originalText) {
+      btn.textContent = btn.dataset.originalText;
+      delete btn.dataset.originalText;
+    }
+  }
 
-function handleCheckout() {
-  stripe.redirectToCheckout({
-    lineItems: [{ price: STRIPE_PRICE_ID, quantity: 1 }],
-    mode: 'payment',
-    successUrl: SITE_URL + '/download.html?session_id={CHECKOUT_SESSION_ID}',
-    cancelUrl: SITE_URL + '/',
-  }).catch(function (error) {
-    console.error('Stripe redirect error:', error);
-    alert('Something went wrong. Please try again.');
+  function showCheckoutError(message) {
+    console.error('Checkout error:', message);
+    alert(message || 'Something went wrong. Please try again.');
+  }
+
+  async function handleCheckout(event) {
+    var btn = event.currentTarget;
+    setButtonLoading(btn, true);
+
+    try {
+      var res = await fetch(CHECKOUT_API_URL + '/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId: STRIPE_PRICE_ID }),
+      });
+
+      var data = await res.json().catch(function () {
+        return {};
+      });
+
+      if (!res.ok) {
+        showCheckoutError(data.error || 'Checkout could not be started.');
+        setButtonLoading(btn, false);
+        return;
+      }
+
+      if (!data.url) {
+        showCheckoutError('Checkout did not return a redirect URL.');
+        setButtonLoading(btn, false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      showCheckoutError('Network error. Check your connection and try again.');
+      setButtonLoading(btn, false);
+    }
+  }
+
+  function showCancelBanner() {
+    if (!window.location.search.includes('checkout=cancelled')) return;
+
+    var hero = document.querySelector('.hero-content');
+    if (!hero) return;
+
+    var banner = document.createElement('p');
+    banner.className = 'checkout-banner checkout-banner-cancel';
+    banner.textContent = 'Checkout was cancelled. You can try again when you\'re ready.';
+    hero.insertBefore(banner, hero.firstChild);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    showCancelBanner();
+
+    var buttons = document.querySelectorAll('#checkout-button, #checkout-button-pricing');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', handleCheckout);
+    });
   });
-}
-
-// Bind to all checkout buttons on the page
-document.addEventListener('DOMContentLoaded', function () {
-  const buttons = document.querySelectorAll('#checkout-button, #checkout-button-pricing');
-  buttons.forEach(function (btn) {
-    btn.addEventListener('click', handleCheckout);
-  });
-});
+})();

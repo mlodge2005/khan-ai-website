@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { CheckoutButton } from '@/components/CheckoutButton';
 import { CancelBannerWrapper } from '@/components/CancelBannerWrapper';
+import { PurchaseLegal } from '@/components/PurchaseLegal';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export default function HomePage() {
   return (
@@ -100,18 +102,14 @@ export default function HomePage() {
             <div className="pricing-note-left">
               <strong>What you need:</strong> An API key from OpenAI, Anthropic, Grok, or DeepSeek.
             </div>
+            <PurchaseLegal />
             <CheckoutButton className="btn-gold">Buy Now — $200</CheckoutButton>
             <p className="pricing-note">No hidden fees. Runs locally on your machine.</p>
           </div>
         </div>
       </section>
 
-      <footer>
-        <div className="container">
-          <p>Built by Khan AI</p>
-          <p style={{ marginTop: '0.5rem' }}>This is a local application. We do not host your data.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

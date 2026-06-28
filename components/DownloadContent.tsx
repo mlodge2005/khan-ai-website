@@ -109,6 +109,13 @@ export function DownloadContent() {
 
             <p className="info">After running, the agent will ask for your business info and API key.</p>
 
+            <p className="download-legal-note">
+              Intel is licensed under our{' '}
+              <Link href="/legal/license">Software License</Link>. Reports are informational only —
+              review AI output before acting on it. See{' '}
+              <Link href="/legal/terms">Terms of Service</Link> (sections 7–8).
+            </p>
+
             <DetailsSection title="What you need to get started">
               <ol>
                 <li>

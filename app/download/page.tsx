@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { DownloadContent } from '@/components/DownloadContent';
+import { SiteFooter } from '@/components/SiteFooter';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,8 +10,11 @@ export const metadata: Metadata = {
 
 export default function DownloadPage() {
   return (
-    <Suspense fallback={<div className="download-page"><p>Loading…</p></div>}>
-      <DownloadContent />
-    </Suspense>
+    <>
+      <Suspense fallback={<div className="download-page"><p>Loading…</p></div>}>
+        <DownloadContent />
+      </Suspense>
+      <SiteFooter />
+    </>
   );
 }

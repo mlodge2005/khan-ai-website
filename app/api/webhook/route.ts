@@ -1,8 +1,10 @@
+import { randomUUID } from 'crypto';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
 const INTERNAL_SEND_URL = process.env.INTERNAL_SEND_URL || 'http://146.190.78.237:3847/send-welcome';
+const INTERNAL_SEND_TOKEN = process.env.INTERNAL_SEND_TOKEN || '';
 
 function getStripe(): Stripe {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -44,18 +46,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
-    console.log(`Checkout completed: ${session.id} -> ${email}`);
+    const downloadToken = randomUUID();
+    console.log(`Checkout completed: ${session.id} -> ${email} (token ${downloadToken})`);
 
     // Forward to internal email sender on the VPS
     try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (INTERNAL_SEND_TOKEN) {
+        headers['x-internal-token'] = INTERNAL_SEND_TOKEN;
+      }
+
       const response = await fetch(INTERNAL_SEND_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           email,
           name,
           sessionId: session.id,
           metadata: session.metadata || {},
+          downloadToken,
         }),
       });
 

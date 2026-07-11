@@ -9,6 +9,7 @@ type RequestBody = {
   name?: string;
   email?: string;
   businessName?: string | null;
+  reason?: string | null;
 };
 
 function isValidEmail(value: string): boolean {
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
   const name = (body.name || '').trim();
   const email = (body.email || '').trim().toLowerCase();
   const businessName = (body.businessName || '').trim() || null;
+  const reason = (body.reason || '').trim() || null;
 
   if (!name) {
     return NextResponse.json({ error: 'Name is required' }, { status: 400 });
@@ -40,6 +42,7 @@ export async function POST(request: Request) {
     name,
     email,
     businessName,
+    reason,
     notifyEmail: NOTIFY_EMAIL,
     requestedAt: new Date().toISOString(),
     source: 'khan-automation.com/download',

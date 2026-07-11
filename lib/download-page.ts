@@ -374,6 +374,10 @@ function requestDownloadForm(): string {
             <label for="req-business">Business name <span>(optional)</span></label>
             <input class="form-input" type="text" id="req-business" name="businessName" autocomplete="organization" placeholder="Your business">
           </div>
+          <div class="form-group">
+            <label for="req-reason">Why do you need another copy? <span>(optional)</span></label>
+            <textarea class="form-input" id="req-reason" name="reason" rows="3" placeholder="Lost the installer, deleted by accident, etc." style="resize:vertical"></textarea>
+          </div>
           <button class="btn form-submit" type="submit" id="req-submit">Request download link</button>
         </form>
         <div class="form-message form-success" id="request-success" role="status">
@@ -397,6 +401,7 @@ function requestDownloadForm(): string {
             var name = (document.getElementById('req-name') || {}).value || '';
             var email = (document.getElementById('req-email') || {}).value || '';
             var businessName = (document.getElementById('req-business') || {}).value || '';
+            var reason = (document.getElementById('req-reason') || {}).value || '';
             if (!name.trim() || !email.trim()) {
               if (errorEl) {
                 errorEl.textContent = 'Name and email are required.';
@@ -414,7 +419,8 @@ function requestDownloadForm(): string {
               body: JSON.stringify({
                 name: name.trim(),
                 email: email.trim(),
-                businessName: businessName.trim() || null
+                businessName: businessName.trim() || null,
+                reason: reason.trim() || null
               })
             })
               .then(function (res) {

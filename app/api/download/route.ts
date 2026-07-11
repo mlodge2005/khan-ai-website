@@ -8,7 +8,7 @@ import {
 } from '@/lib/download-page';
 
 const INTERNAL_VPS_URL =
-  process.env.INTERNAL_VPS_URL || 'http://146.190.78.237:3847';
+  process.env.INTERNAL_VPS_URL || 'https://openclaw.khan-automation.com/api';
 const INTERNAL_SEND_TOKEN = process.env.INTERNAL_SEND_TOKEN || '';
 
 function pageBaseUrl(request: Request): string {

@@ -183,6 +183,85 @@ function pageShell(title: string, body: string): string {
       text-align: left;
     }
     .banner p { color: #F5F5F5; font-size: 0.95rem; }
+    .win-warning {
+      background: #1A1A1C;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .win-warning p { color: #B0B0B0; font-size: 0.9rem; }
+    .request-section {
+      margin-top: 2rem;
+      text-align: left;
+      background: #1A1A1C;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .request-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #F5F5F5;
+    }
+    .request-section .request-intro {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #F5F5F5;
+      margin-bottom: 0.4rem;
+    }
+    .form-group label span {
+      color: #6B6B6B;
+      font-weight: 400;
+    }
+    .form-input {
+      width: 100%;
+      background: #0B0B0C;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.7rem 0.85rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: #F5F5F5;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      border-color: rgba(198, 161, 91, 0.5);
+    }
+    .form-input::placeholder { color: #6B6B6B; }
+    .form-submit {
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+    .form-message {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      display: none;
+    }
+    .form-message.visible { display: block; }
+    .form-success {
+      background: rgba(198, 161, 91, 0.1);
+      color: #F5F5F5;
+    }
+    .form-success strong { color: #C6A15B; }
+    .form-error {
+      background: rgba(255, 80, 80, 0.1);
+      color: #F5F5F5;
+      border: 1px solid rgba(255, 80, 80, 0.2);
+    }
+    .card-wide { max-width: 640px; }
   </style>
 </head>
 <body>
@@ -240,6 +319,7 @@ export function renderDownloadErrorPage(
           ? `<p class="support">Contact support at <a href="mailto:marcus@khan-automation.com">marcus@khan-automation.com</a></p>`
           : ''
       }
+      ${showSupport ? requestDownloadForm() : ''}
       <a class="back" href="https://khan-automation.com/">← Back to Khan AI</a>`;
 
   return pageShell('Download', body);
@@ -269,6 +349,92 @@ function setupSteps(platform: Platform): string {
       <li>Follow the prompts to configure your business and API key</li>
       <li>Run <code>khan-intel</code> to start your first intelligence report</li>
     </ol>`;
+}
+
+function windowsWarningBanner(): string {
+  return `<div class="win-warning">
+        <p>⚠️ Windows may show a &ldquo;not typically downloaded&rdquo; warning. Click <strong style="color:#F5F5F5">More info</strong> then <strong style="color:#F5F5F5">Run anyway</strong> — Intel is safe, open-source software.</p>
+      </div>`;
+}
+
+function requestDownloadForm(): string {
+  return `<div class="request-section">
+        <h2>Need another download link?</h2>
+        <p class="request-intro">Lost your installer or already used your link? Submit your purchase details and we&apos;ll review your request.</p>
+        <form id="request-download-form" novalidate>
+          <div class="form-group">
+            <label for="req-name">Name <span>(required)</span></label>
+            <input class="form-input" type="text" id="req-name" name="name" required autocomplete="name" placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="req-email">Email <span>(required — purchase email)</span></label>
+            <input class="form-input" type="email" id="req-email" name="email" required autocomplete="email" placeholder="you@business.com">
+          </div>
+          <div class="form-group">
+            <label for="req-business">Business name <span>(optional)</span></label>
+            <input class="form-input" type="text" id="req-business" name="businessName" autocomplete="organization" placeholder="Your business">
+          </div>
+          <button class="btn form-submit" type="submit" id="req-submit">Request download link</button>
+        </form>
+        <div class="form-message form-success" id="request-success" role="status">
+          <strong>Request received.</strong> We&apos;ll review your request and get back to you.
+        </div>
+        <div class="form-message form-error" id="request-error" role="alert">
+          Something went wrong. Email <a href="mailto:marcus@khan-automation.com">marcus@khan-automation.com</a> directly.
+        </div>
+      </div>
+      <script>
+        (function () {
+          var form = document.getElementById('request-download-form');
+          if (!form) return;
+          var successEl = document.getElementById('request-success');
+          var errorEl = document.getElementById('request-error');
+          var submitBtn = document.getElementById('req-submit');
+          form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (successEl) successEl.classList.remove('visible');
+            if (errorEl) errorEl.classList.remove('visible');
+            var name = (document.getElementById('req-name') || {}).value || '';
+            var email = (document.getElementById('req-email') || {}).value || '';
+            var businessName = (document.getElementById('req-business') || {}).value || '';
+            if (!name.trim() || !email.trim()) {
+              if (errorEl) {
+                errorEl.textContent = 'Name and email are required.';
+                errorEl.classList.add('visible');
+              }
+              return;
+            }
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Sending…';
+            }
+            fetch('/api/request-download', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: name.trim(),
+                email: email.trim(),
+                businessName: businessName.trim() || null
+              })
+            })
+              .then(function (res) {
+                if (!res.ok) throw new Error('request failed');
+                return res.json();
+              })
+              .then(function () {
+                form.style.display = 'none';
+                if (successEl) successEl.classList.add('visible');
+              })
+              .catch(function () {
+                if (errorEl) errorEl.classList.add('visible');
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.textContent = 'Request download link';
+                }
+              });
+          });
+        })();
+      </script>`;
 }
 
 function alternateLinks(
@@ -316,6 +482,7 @@ export function renderDownloadPage(options: {
         <h2>Having trouble?</h2>
         ${setupSteps(platform)}
       </div>
+      ${requestDownloadForm()}
       <a class="back" href="https://khan-automation.com/">← Back to Khan AI</a>`;
 
     return pageShell('Download', body);
@@ -328,8 +495,11 @@ export function renderDownloadPage(options: {
 
   const primaryAction = `<a class="btn" id="download-btn" href="${safeDownloadUrl}">Download for ${escapeHtml(label)}</a>`;
 
+  const winWarning = platform === 'windows' ? windowsWarningBanner() : '';
+
   const body = `
       ${mismatchNote}
+      ${winWarning}
       <div class="status"><span class="spinner"></span> Your download is starting…</div>
       <h1>Thanks for your purchase</h1>
       <p class="sub">Your Competitive Intelligence Agent is ready to install.</p>
@@ -340,6 +510,7 @@ export function renderDownloadPage(options: {
         <h2>Having trouble?</h2>
         ${setupSteps(platform)}
       </div>
+      ${requestDownloadForm()}
       <a class="back" href="https://khan-automation.com/">← Back to Khan AI</a>
       <iframe id="download-frame" title="Download" style="display:none;width:0;height:0;border:0" aria-hidden="true"></iframe>
       <script>

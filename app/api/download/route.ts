@@ -16,6 +16,13 @@ function pageBaseUrl(request: Request): string {
   return url.toString();
 }
 
+function vpsUrl(path: string): string {
+  const base = INTERNAL_VPS_URL.endsWith('/')
+    ? INTERNAL_VPS_URL
+    : `${INTERNAL_VPS_URL}/`;
+  return new URL(path.replace(/^\/+/, ''), base).toString();
+}
+
 function resolvePlatform(
   userAgent: string,
   platformOverride: Platform | null
@@ -52,10 +59,7 @@ export async function GET(request: Request) {
   const platformOverride = parsePlatform(searchParams.get('platform'));
   const { platform, isMobile, uaMismatch } = resolvePlatform(userAgent, platformOverride);
 
-  const downloadUrl = new URL(
-    `/download/${encodeURIComponent(token)}`,
-    INTERNAL_VPS_URL
-  ).toString();
+  const downloadUrl = vpsUrl(`download/${encodeURIComponent(token)}`);
 
   return htmlResponse(
     renderDownloadPage({
